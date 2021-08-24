@@ -7,6 +7,11 @@
         "http://datigis.comune.intranet",
         "http://datigis2.comune.intranet"]
     },
+    "geoFenceUrl": "/",
+    "geoFenceGeoServerInstance": {
+      "url": "/geoserver/",
+      "id": 0
+    },
     "geoStoreUrl": "rest/geostore/",
     "mailingList": "https://groups.google.com/forum/#!forum/mapstore-users",
     "printUrl": "pdf/info.json",
@@ -847,6 +852,44 @@
           }
         ],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
-        "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer"]
+        "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer"],
+        "rulesmanager": [
+          "Redirect",
+          {
+            "name": "OmniBar",
+            "cfg": {
+              "containerPosition": "header",
+              "className": "navbar shadow navbar-home"
+            }
+          },
+          {
+            "name": "Home",
+            "override": {
+              "OmniBar": {
+                "position": 1,
+                "priority": 1
+              }
+            }
+          }, {
+            "name": "ManagerMenu",
+            "cfg": {
+                "enableContextManager": true
+            }
+        },
+          "Login",
+          "NavMenu",
+          {
+            "name": "Header",
+            "hide": true
+          },
+          "RulesDataGrid",
+          "Notifications",
+          {
+            "name": "RulesEditor",
+            "cfg": {
+              "containerPosition": "columns"
+            }
+          }
+        ]
       }
   }
