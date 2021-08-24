@@ -1,141 +1,60 @@
-var path = require("path");
-var DefinePlugin = require("webpack/lib/DefinePlugin");
-var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
-var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
-var NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require("path");
+const extractThemesPlugin = require('./MapStore2/build/themes.js').extractThemesPlugin;
+const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation.js').plugin;
 
-const assign = require('object-assign');
-const extractThemesPlugin = require('./MapStore2/themes.js').extractThemesPlugin;
-module.exports = {
-    entry: assign({
-        'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
-        'webpack': 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
-        'MapStore2-C027': path.join(__dirname, "js", "app"),
-        "themes/firenze": path.join(__dirname, "assets", "themes", "firenze", "theme.less"),
-        "embedded": path.join(__dirname, "js", "embedded")
-    }),
-    output: {
-        path: path.join(__dirname, "dist"),
-        publicPath: "/dist/",
-        filename: "[name].js"
+module.exports = require('./MapStore2/build/buildConfig')(
+    {
+        'MapStore2-C027': path.join(__dirname, "js", "apps", "app"),
+        "embedded": path.join(__dirname, "js", "apps", "embedded"),
+        'geostory-embedded': path.join(__dirname, "js", "apps", "geostoryEmbedded"),
+        "dashboard-embedded": path.join(__dirname, "js", "apps", "dashboardEmbedded")
     },
-    plugins: [
-        new CopyWebpackPlugin([
-            { from: path.join(__dirname, 'node_modules', 'bootstrap', 'less'), to: path.join(__dirname, "web", "client", "dist", "bootstrap", "less") }
-        ]),
-        new LoaderOptionsPlugin({
-            debug: true,
-            options: {
-                postcss: {
-                    plugins: [
-                      require('postcss-prefix-selector')({prefix: '.MapStore2-C027', exclude: ['.ms2', '.MapStore2-C027', '[data-ms2-container]']})
-                    ]
-                },
-                context: __dirname
+    {
+        "themes/firenze": path.join(__dirname, "themes", "firenze", "theme.less")
+    },
+    {
+        base: __dirname,
+        dist: path.join(__dirname, "dist"),
+        framework: path.join(__dirname, "MapStore2", "web", "client"),
+        code: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
+    },
+    [extractThemesPlugin, ModuleFederationPlugin],
+    false,
+    "dist/",
+    "",
+    [],
+    {
+        "@mapstore/patcher": path.resolve(__dirname, "node_modules", "@mapstore", "patcher"),
+        "@mapstore": path.resolve(__dirname, "MapStore2", "web", "client"),
+        "@js": path.resolve(__dirname, "js")
+    }, {
+        '/rest': {
+            target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
+            secure: false,
+            headers: {
+                host: "dev-mapstore.geosolutionsgroup.com"
             }
-        }),
-        new DefinePlugin({
-            "__DEVTOOLS__": true
-        }),
-        new NormalModuleReplacementPlugin(/leaflet$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "leaflet")),
-        new NormalModuleReplacementPlugin(/openlayers$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "openlayers")),
-        new NormalModuleReplacementPlugin(/cesium$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "cesium")),
-        new NormalModuleReplacementPlugin(/proj4$/, path.join(__dirname, "MapStore2", "web", "client", "libs", "proj4")),
-        new NoEmitOnErrorsPlugin(),
-        extractThemesPlugin
-    ],
-    resolve: {
-      extensions: [".js", ".jsx"]
-    },
-    module: {
-        noParse: [/html2canvas/],
-        rules: [
-            {
-                test: /\.css$/,
-                use: [{
-                    loader: 'style-loader'
-                }, {
-                    loader: 'css-loader'
-                }, {
-                  loader: 'postcss-loader'
-                }]
-            },
-            {
-                test: /\.less$/,
-                exclude: /themes[\\\/]?.+\.less$/,
-                use: [{
-                    loader: 'style-loader'
-                }, {
-                    loader: 'css-loader'
-                }, {
-                    loader: 'less-loader'
-                }]
-            },
-            {
-                test: /themes[\\\/]?.+\.less$/,
-                use: extractThemesPlugin.extract({
-                        fallback: 'style-loader',
-                        use: ['css-loader', 'postcss-loader', 'less-loader']
-                    })
-            },
-            {
-                test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        mimetype: "application/font-woff"
-                    }
-                }]
-            },
-            {
-                test: /\.(ttf|eot|svg)(\?v=[0-9].[0-9].[0-9])?$/,
-                use: [{
-                    loader: 'file-loader',
-                    options: {
-                        name: "[name].[ext]"
-                    }
-                }]
-            },
-            {
-                test: /\.(png|jpg|gif)$/,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        name: "[path][name].[ext]",
-                        limit: 8192
-                    }
-                }]
-            },
-            {
-                test: /\.jsx?$/,
-                exclude: /(ol\.js)$|(Cesium\.js)$|(cesium\.js)$/,
-                use: [{
-                    loader: "react-hot-loader"
-                }],
-                include: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
-            }, {
-                test: /\.jsx?$/,
-                exclude: /(ol\.js)$|(Cesium\.js)$/,
-                use: [{
-                    loader: "babel-loader"
-                }],
-                include: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
+        },
+        '/proxy': {
+            target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
+            secure: false,
+            headers: {
+                host: "dev-mapstore.geosolutionsgroup.com"
             }
-        ]
-    },
-    devServer: {
-        proxy: {
-            '/mapstore2/rest/geostore': {
-                target: "http://dev.mapstore2.geo-solutions.it",
-                pathRewrite: {'^/mapstore2/rest/geostore': '/mapstore/rest/geostore'}
-            },
-            '/mapstore2/proxy': {
-                target: "http://dev.mapstore2.geo-solutions.it",
-                pathRewrite: {'^/mapstore2/proxy': '/mapstore/proxy'}
+        },
+        '/pdf': {
+            target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
+            secure: false,
+            headers: {
+                host: "dev-mapstore.geosolutionsgroup.com"
+            }
+        },
+        '/mapstore/pdf': {
+            target: "https://dev-mapstore.geosolutionsgroup.com",
+            secure: false,
+            headers: {
+                host: "dev-mapstore.geosolutionsgroup.com"
             }
         }
-    },
-
-    devtool: 'eval'
-};
+    }
+);
