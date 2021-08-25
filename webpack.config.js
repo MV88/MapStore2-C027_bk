@@ -57,7 +57,7 @@ module.exports = require('./MapStore2/build/buildConfig')(
             }
         },
         '/geofence': {
-            target: "http://dev-mapstore.geosolutionsgroup.com""
+            target: "http://dev-mapstore.geosolutionsgroup.com"
         }
     }
 );

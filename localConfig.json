@@ -610,7 +610,6 @@
             "Login",
             "Language",
             "NavMenu",
-            "Attribution",
             "ScrollTop",
             "Notifications"
           ],
@@ -664,7 +663,7 @@
                 },
                 "fluid": true
               }
-            }, "Footer", {
+            }, {
             "name": "Cookie",
             "cfg": {
               "externalCookieUrl" : "",
@@ -683,7 +682,6 @@
           "NavMenu",
           "DashboardSave",
           "DashboardSaveAs",
-          "Attribution",
           "Home",
           {
             "name": "DashboardEditor",
@@ -776,7 +774,6 @@
           "BurgerMenu",
           "Language",
           "NavMenu",
-          "Attribution",
           "Home",
           "GeoStory",
           "GeoStorySave",
@@ -833,7 +830,6 @@
           "Login",
           "Language",
           "NavMenu",
-          "Attribution",
           "Tutorial",
           {
               "name": "ContextCreator",
