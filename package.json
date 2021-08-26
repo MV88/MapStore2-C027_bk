@@ -275,6 +275,8 @@
         "xpath": "0.0.27"
     },
     "scripts": {
+        "build-backend": "mvn clean install",
+        "backend": "npm run build-backend && mvn tomcat7:run-war -f ./web/pom.xml",
         "clean": "rimraf dist",
         "compile": "npm run clean && mkdirp ./dist && node --max_old_space_size=3072 ./node_modules/webpack/bin/webpack.js --progress --color --config prod-webpack.config.js",
         "start": "webpack serve --progress --color --port 8081 --hot --inline --content-base .",

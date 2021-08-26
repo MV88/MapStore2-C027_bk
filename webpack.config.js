@@ -29,35 +29,19 @@ module.exports = require('./MapStore2/build/buildConfig')(
         "@js": path.resolve(__dirname, "js")
     }, {
         '/rest': {
-            target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
-            secure: false,
-            headers: {
-                host: "dev-mapstore.geosolutionsgroup.com"
-            }
+            target: "http://localhost:8080/mapstore"
         },
         '/proxy': {
-            target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
-            secure: false,
-            headers: {
-                host: "dev-mapstore.geosolutionsgroup.com"
-            }
+            target: "http://localhost:8080/mapstore"
         },
         '/pdf': {
-            target: "https://dev-mapstore.geosolutionsgroup.com/mapstore",
-            secure: false,
-            headers: {
-                host: "dev-mapstore.geosolutionsgroup.com"
-            }
+            target: "http://localhost:8080/mapstore"
         },
         '/mapstore/pdf': {
-            target: "https://dev-mapstore.geosolutionsgroup.com",
-            secure: false,
-            headers: {
-                host: "dev-mapstore.geosolutionsgroup.com"
-            }
+            target: "http://localhost:8080"
         },
         '/geofence': {
-            target: "http://dev-mapstore.geosolutionsgroup.com"
+            target: "http://localhost:8080"
         }
     }
 );

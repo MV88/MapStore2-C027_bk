@@ -16,6 +16,10 @@ Start the development application locally:
 
 `npm install`
 
+in one terminal
+`npm run backend`
+
+in the other terminal
 `npm start`
 
 The application runs at `http://localhost:8081` afterwards.
