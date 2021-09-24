@@ -10,6 +10,11 @@ import {
     setConfigProp,
     setLocalConfigurationFile
 } from '@mapstore/utils/ConfigUtils';
+import appConfigGeostoryEmbedded from '@mapstore/product/appConfigGeostoryEmbedded';
+import pluginsEmbedded from '@mapstore/product/pluginsGeostoryEmbedded';
+import main from '@mapstore/product/main';
+import { loadVersion } from '@mapstore/actions/version';
+
 /**
  * Add custom (overriding) translations with:
  *
@@ -25,4 +30,11 @@ setConfigProp('translationsPath', ['./MapStore2/web/client/translations', './tra
  */
 setLocalConfigurationFile('localConfig.json');
 
-import('@mapstore/product/geostoryEmbedded');
+main(
+    { ...appConfigGeostoryEmbedded, themeCfg: { theme: "firenze" } },
+    pluginsEmbedded,
+    (cfg) => ({
+        ...cfg,
+        initialActions: [loadVersion]
+    })
+);

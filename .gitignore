@@ -16,3 +16,4 @@ web/src/main/webapp/WEB-INF/classes/geostore-spring-security.xml
 web/ldap.properties
 package-lock.json
 .vscode
+webapps

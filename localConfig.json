@@ -314,6 +314,21 @@
                 }
               },
               {
+                "name": "Identify",
+                "cfg": {
+                  "showHighlightFeatureButton": true,
+                  "viewerOptions": {
+                    "container": "{context.ReactSwipe}"
+                  },
+                  "showEdit": true
+                },
+                "override": {
+                  "Toolbar": {
+                    "position": 11
+                  }
+                }
+              },
+              {
                 "name": "Share",
                 "cfg": {
                   "showAPI": false,

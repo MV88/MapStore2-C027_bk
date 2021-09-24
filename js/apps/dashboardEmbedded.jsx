@@ -10,6 +10,14 @@ import {
     setConfigProp,
     setLocalConfigurationFile
 } from '@mapstore/utils/ConfigUtils';
+import { loadVersion } from '@mapstore/actions/version';
+import { triggerShowConnections } from '@mapstore/actions/dashboard';
+import appConfigDashboardEmbedded from '@mapstore/product/appConfigDashboardEmbedded';
+import pluginsDashboardEmbedded from '@mapstore/product/pluginsDashboardEmbedded';
+import main from '@mapstore/product/main';
+import url from 'url';
+
+const { query } = url.parse(window.location.href, true);
 
 /**
  * Add custom (overriding) translations with:
@@ -24,4 +32,19 @@ setConfigProp('translationsPath', ['./MapStore2/web/client/translations', './tra
  */
 setLocalConfigurationFile('localConfig.json');
 
-import('@mapstore/product/dashboardEmbedded');
+main(
+    {
+        ...appConfigDashboardEmbedded,
+        themeCfg: {
+            theme: "firenze"
+        }
+    },
+    pluginsDashboardEmbedded,
+    (cfg) => ({
+        ...cfg,
+        initialActions: [
+            loadVersion,
+            triggerShowConnections.bind(null, !!query.connections)
+        ]
+    })
+);
